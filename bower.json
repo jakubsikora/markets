@@ -3,6 +3,6 @@
   "version": "0.0.1",
   "description": "Show prices for markets",
   "dependencies": {
-    "bootstrap": "~3"
+    "bootstrap": "~3.3.4"
   }
 }

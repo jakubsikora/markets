@@ -3,12 +3,8 @@
   "description": "Show prices for markets",
   "version": "0.0.1",
   "author": "Jakub Sikora",
-  "engines": {
-    "node": "0.10.x",
-    "npm": "1.4.x"
-  },
   "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install",
+    "postinstall": "bower install",
     "start": "node app.js"
   },
   "dependencies": {
