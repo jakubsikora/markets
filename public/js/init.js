@@ -7,7 +7,7 @@ var markets = [],
 init();
 
 /**
- * Initialize app with EURUSD_MARKET_ID market
+ * Initialize app with EURUSD_MARKET_ID market.
  */
 function init() {
   var market = new Market(EURUSD_MARKET_ID);
@@ -15,12 +15,18 @@ function init() {
   markets.push(market);
 };
 
+/**
+ * Check if given market is active.
+ */
 function marketExist(marketId) {
   return markets.map(function(market) {
     return market.id;
   }).indexOf(marketId);
 };
 
+/**
+ * Get Market object by id.
+ */
 function findById(marketId) {
   return markets.filter(function(market) {
     return market.id === marketId;

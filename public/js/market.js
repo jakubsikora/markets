@@ -1,22 +1,31 @@
 var POSITIVE_CLASS = 'positive',
     NEGATIVE_CLASS = 'negative';
 
+/**
+ * Market class
+ */
 var Market = function(id) {
+  this.id = id;
   this.time = null;
-  this.timestamp = null;
+
   this.bid = '-';
   this.bidClass = null;
+  this.bids = [];
+
   this.ask = '-';
   this.askClass = null;
+  this.asks = [];
+
   this.avg = '-';
   this.avgClass = null;
+
   this.active = false;
-  this.bids = [];
-  this.asks = [];
   this.avgTicks = 10;
-  this.id = id;
 };
 
+/**
+ * Activate market and start fetching the prices.
+ */
 Market.prototype.activate = function() {
   var that = this;
   that.active = true;
@@ -26,20 +35,29 @@ Market.prototype.activate = function() {
   });
 };
 
+/**
+ * Deactivate market and stop fetching the prices.
+ */
 Market.prototype.deactivate = function() {
   var that = this;
   this.active = false;
+
   window.unsubscribeFromMarket(that.id);
 };
 
+/**
+ * Update market properties.
+ */
 Market.prototype.updateMarket = function(data) {
-  this.timestamp = data.time;
   this.formatTime(data.time);
   this.formatBid(data.bid);
   this.formatAsk(data.ask);
   this.calculateAvg(data);
 };
 
+/**
+ * Format time based on timestamp to HH:mm:ss.
+ */
 Market.prototype.formatTime = function(timestamp) {
   var date = new Date(timestamp),
       hours = date.getHours(),
@@ -53,6 +71,10 @@ Market.prototype.formatTime = function(timestamp) {
               + (sec < 10 ? '0' + sec : sec);
 };
 
+/**
+ * Format bid price and update it render class to show positive/negative
+ * indicators.
+ */
 Market.prototype.formatBid = function(bid) {
   var newBid;
   this.bidClass = null;
@@ -65,6 +87,10 @@ Market.prototype.formatBid = function(bid) {
   this.bid = newBid;
 };
 
+/**
+ * Format ask price and update it render class to show positive/negative
+ * indicators.
+ */
 Market.prototype.formatAsk = function(ask) {
   var newAsk;
   this.askClass = null;
@@ -77,10 +103,16 @@ Market.prototype.formatAsk = function(ask) {
   this.ask = newAsk;
 };
 
+/**
+ * Format price to 6 decimal places.
+ */
 Market.prototype.formatPrice = function(price) {
   return parseFloat(price).toFixed(6);
 };
 
+/**
+ * Calculate moving average based on full 10 ticks for bid and ask prices.
+ */
 Market.prototype.calculateAvg = function(data) {
   var that = this,
       bidAvg = 0,
@@ -100,6 +132,7 @@ Market.prototype.calculateAvg = function(data) {
     this.asks.push(data.ask);
   }
 
+  // Check if we have enough data to calculate avg.
   if (this.bids.length === this.avgTicks
       && this.asks.length === this.avgTicks) {
 
@@ -115,6 +148,7 @@ Market.prototype.calculateAvg = function(data) {
 
     askAvg = askAvg / this.avgTicks;
 
+    // Calculate moving avg.
     this.avg = that.formatPrice(bidAvg - askAvg);
   }
 };

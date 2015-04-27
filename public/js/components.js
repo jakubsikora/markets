@@ -1,12 +1,20 @@
+/**
+ * MarketBox component is a wrapper which holds the market list and the
+ * form. Initially it loads the first market from global markets array.
+ */
 var MarketBox = React.createClass({
   getInitialState: function() {
     return {data: [markets[0]]};
   },
   componentDidMount: function() {
+    // Load markets.
     this.loadMarkets();
+
+    // Check every 1 sec for markets status.
     setInterval(this.loadMarkets, 1000);
   },
   loadMarkets: function() {
+    // Get all active markets and update the state if needed.
     var activeMarkets = markets.filter(function(market) {
       return market.active;
     });
@@ -33,6 +41,9 @@ var MarketBox = React.createClass({
   }
 });
 
+/**
+ * Component which renders all markets set in state.
+ */
 var MarketList = React.createClass({
   render: function() {
     var marketNodes = this.props.data.map(function(market) {
@@ -55,8 +66,12 @@ var MarketList = React.createClass({
   }
 });
 
+/**
+ * Compontent which render a market with all its details.
+ */
 var MarketItem = React.createClass({
   removeMarket: function(marketId) {
+    // Deactive the market and remove it from global array.
     var market = findById(marketId);
     market.deactivate();
     markets.splice(markets.indexOf(market), 1);
@@ -81,10 +96,14 @@ var MarketItem = React.createClass({
   }
 });
 
+/**
+ * Compontent which renders the form for activating markets from the selectbox.
+ */
 var MarketForm = React.createClass({
   addMarket: function(e) {
     var marketId,
         market;
+
     e.preventDefault();
 
     marketId = React.findDOMNode(this.refs.marketId).value.trim();
@@ -120,6 +139,9 @@ var MarketForm = React.createClass({
   }
 });
 
+/**
+ * Component which renders select option for a market.
+ */
 var MarketOption = React.createClass({
   render: function() {
     var market = findById(this.props.id);
@@ -136,6 +158,7 @@ var MarketOption = React.createClass({
   }
 });
 
+// Render the MarketBox
 React.render(
   <MarketBox />,
   document.getElementById('content')
